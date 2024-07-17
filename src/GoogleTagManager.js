@@ -1,23 +1,31 @@
 import { useEffect } from 'react';
 
 const GoogleTagManager = ({ gtmId }) => {
-    useEffect(() => {
-      const script = document.createElement('script');
-      script.innerHTML = `
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','${gtmId}');
-      `;
-      document.head.appendChild(script);
-  
-      return () => {
-        document.head.removeChild(script);
-      };
-    }, [gtmId]);
-  
-    return null;
-  };
+  useEffect(() => {
+    // Replace with your Matomo URL and Site ID
+    const matomoUrl = 'https://phedre.matomo.cloud/';
+    const siteId = '2';
+
+    if (!window._paq) {
+      window._paq = [];
+    }
+
+    window._paq.push(['trackPageView']);
+    window._paq.push(['enableLinkTracking']);
+    (function() {
+      var u = matomoUrl;
+      window._paq.push(['setTrackerUrl', u + 'matomo.php']);
+      window._paq.push(['setSiteId', siteId]);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.type = 'text/javascript';
+      g.async = true;
+      g.defer = true;
+      g.src = u + 'matomo.js';
+      s.parentNode.insertBefore(g, s);
+    })();
+  }, []);
+
+  return null;
+};
 
 export default GoogleTagManager;
