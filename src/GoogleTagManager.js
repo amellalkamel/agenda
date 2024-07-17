@@ -1,21 +1,23 @@
 import { useEffect } from 'react';
 
-const GoogleTagManager = () => {
-  useEffect(() => {
-    var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="https://phedre.matomo.cloud/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '2']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src='https://cdn.matomo.cloud/phedre.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-  }, []);
-
-  return null;
-};
+const GoogleTagManager = ({ gtmId }) => {
+    useEffect(() => {
+      const script = document.createElement('script');
+      script.innerHTML = `
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${gtmId}');
+      `;
+      document.head.appendChild(script);
+  
+      return () => {
+        document.head.removeChild(script);
+      };
+    }, [gtmId]);
+  
+    return null;
+  };
 
 export default GoogleTagManager;
